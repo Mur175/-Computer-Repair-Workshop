@@ -46,7 +46,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
 
     <label style="display:block;margin:14px 0">
       <span style="display:block;color:#a5a0bd;font-size:.78rem;margin-bottom:7px">اسم المستخدم</span>
-      <input value="{{ loginUser }}" onChange="{{ onLoginUser }}" autoComplete="username" placeholder="admin" style="width:100%;color:#f5f3ff;background:#0d0b1e;border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:12px 14px" />
+      <input value="{{ loginUser }}" onChange="{{ onLoginUser }}" autoComplete="username" placeholder="اسم المستخدم" style="width:100%;color:#f5f3ff;background:#0d0b1e;border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:12px 14px" />
     </label>
 
     <label style="display:block;margin:14px 0">
@@ -780,7 +780,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
               <div style="color:#999;margin-top:22px">التوقيع: ..........................</div>
             </div>
             <div style="flex:1;border-top:1px solid #111;padding-top:8px;font-size:.8rem">
-              <b>مدير الورشة</b>
+              <b>مسؤول الورشة</b>
               <div style="color:#555;margin-top:4px">اعتماد</div>
               <div style="color:#999;margin-top:22px">التوقيع: ..........................</div>
             </div>
@@ -799,11 +799,11 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;المظهر&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;مريح&quot;,&quot;مضغوط&quot;],&quot;default&quot;:&quot;مريح&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;المظهر&quot;},&quot;showDemoAccounts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;تسجيل الدخول&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;المظهر&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;مريح&quot;,&quot;مضغوط&quot;],&quot;default&quot;:&quot;مريح&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;المظهر&quot;},&quot;showDemoAccounts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;تسجيل الدخول&quot;}}">
 class Component extends DCLogic {
   C = { cyan:'#22d3ee', purple:'#8b5cf6', pink:'#f43fbd', lime:'#b8f34b', orange:'#ffae4b', red:'#fb5582' };
   KEY = 'cmw-system-v2';
-  ROLES = ['مدير النظام','مدير الورشة','مشرف','فني','مشاهد'];
+  ROLES = ['مدير النظام','مدير قسم','مسؤول شعبة','مسؤول ورشة','فني','مشاهد'];
   ORDER_STATUSES = ['جديد','قيد الفحص','تم التشخيص','بانتظار الموافقة','بانتظار قطعة','قيد الإصلاح','قيد الاختبار','جاهز للتسليم','تم التسليم','مغلق','ملغي'];
   STAGES = ['استلام','فحص','تشخيص','موافقة','إصلاح','اختبار','جاهز','تسليم'];
   DEV_TYPES = ['Desktop','Laptop','Printer','Monitor','UPS','Network Device','Other'];
@@ -815,16 +815,17 @@ class Component extends DCLogic {
 
   PERMS = {
     'مدير النظام': { pages:'all', write:'all' },
-    'مدير الورشة': { pages:['dashboard','receipts','devices','orders','employees','tasks','needs','reports','activity','settings'], write:['receipts','devices','orders','employees','tasks','needs'] },
-    'مشرف': { pages:['dashboard','receipts','devices','orders','tasks','reports','activity'], write:['orders','tasks'] },
+    'مدير قسم': { pages:['dashboard','receipts','devices','orders','employees','tasks','needs','reports','activity'], write:['receipts','devices','orders','employees','tasks','needs'] },
+    'مسؤول شعبة': { pages:['dashboard','receipts','devices','orders','employees','tasks','needs','reports','activity'], write:['receipts','devices','orders','tasks','needs'] },
+    'مسؤول ورشة': { pages:['dashboard','receipts','devices','orders','employees','tasks','needs','reports','activity'], write:['receipts','devices','orders','tasks','needs'] },
     'فني': { pages:['dashboard','devices','orders','tasks','needs'], write:['orders','tasks','needs'] },
     'مشاهد': { pages:['dashboard','receipts','devices','orders','reports'], write:[] }
   };
 
   ACCOUNTS = [
     { user:'admin', pass:'cmw2026', active:true, role:'مدير النظام', name:'م. عمر الحسيني', empId:null },
-    { user:'manager', pass:'cmw2026', active:true, role:'مدير الورشة', name:'ماجد الدوسري', empId:'EMP-006' },
-    { user:'super', pass:'cmw2026', active:true, role:'مشرف', name:'عبد الرحمن الحربي', empId:'EMP-005' },
+    { user:'manager', pass:'cmw2026', active:true, role:'مسؤول ورشة', name:'ماجد الدوسري', empId:'EMP-006' },
+    { user:'super', pass:'cmw2026', active:true, role:'مسؤول شعبة', name:'عبد الرحمن الحربي', empId:'EMP-005' },
     { user:'tech', pass:'cmw2026', active:true, role:'فني', name:'أحمد السعيد', empId:'EMP-001' },
     { user:'view', pass:'cmw2026', active:true, role:'مشاهد', name:'سارة القحطاني', empId:null }
   ];
@@ -842,7 +843,16 @@ class Component extends DCLogic {
     let db = null, session = null;
     try { db = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch(e) { db = null; }
     try { session = JSON.parse(localStorage.getItem(this.KEY + '-session') || 'null'); } catch(e) { session = null; }
-    if (db && Array.isArray(db.accounts)) db.accounts.forEach(a => { if (a.pass === undefined) a.pass = this.PASS; if (a.active === undefined) a.active = true; });
+    if (db && Array.isArray(db.accounts)) db.accounts.forEach(a => {
+      if (a.pass === undefined) a.pass = this.PASS;
+      if (a.active === undefined) a.active = true;
+      if (a.role === 'مدير الورشة') a.role = 'مسؤول ورشة';
+      if (a.role === 'مشرف') a.role = 'مسؤول شعبة';
+    });
+    if (db && Array.isArray(db.employees)) db.employees.forEach(e => {
+      if (e.role === 'مدير الورشة') e.role = 'مسؤول ورشة';
+      if (e.role === 'مشرف') e.role = 'مسؤول شعبة';
+    });
     const broken = !db || !db.settings || !db.accounts || !Array.isArray(db.devices) || !db.devices.length
       || !Array.isArray(db.receipts) || !db.receipts.length || !Array.isArray(db.orders) || !db.orders.length
       || !Array.isArray(db.employees) || !db.employees.length || !Array.isArray(db.tasks) || !Array.isArray(db.needs) || !Array.isArray(db.activity);
@@ -883,8 +893,8 @@ class Component extends DCLogic {
       ['EMP-002','خالد المحمد','1057','فني صيانة','الصيانة','فني'],
       ['EMP-003','فهد الغامدي','1063','فني دعم فني','الدعم الفني','فني'],
       ['EMP-004','سعد العتيبي','1072','فني شبكات','الشبكات','فني'],
-      ['EMP-005','عبد الرحمن الحربي','1015','مشرف ورشة','الصيانة','مشرف'],
-      ['EMP-006','ماجد الدوسري','1002','مدير الورشة','الإدارة','مدير الورشة']
+      ['EMP-005','عبد الرحمن الحربي','1015','مسؤول شعبة','الصيانة','مسؤول شعبة'],
+      ['EMP-006','ماجد الدوسري','1002','مسؤول ورشة','الإدارة','مسؤول ورشة']
     ].map((e, i) => ({ id:e[0], name:e[1], empNo:e[2], job:e[3], dept:e[4], role:e[5], active:true, addedAt: iso(ago(320 - i * 20)) }));
 
     const devSeed = [
@@ -975,13 +985,13 @@ class Component extends DCLogic {
 
     const activity = [];
     const push = (who, role, action, target, days, h) => activity.push({ id:'LOG-' + (activity.length + 1), who, role, action, target, ts: iso(ago(days, h)) });
-    push('عبد الرحمن الحربي','مشرف','أنشأ بطاقة استلام','RC-0008',1,8);
+    push('عبد الرحمن الحربي','مسؤول شعبة','أنشأ بطاقة استلام','RC-0008',1,8);
     push('أحمد السعيد','فني','غيّر حالة الأمر إلى قيد الإصلاح','WO-0001',1,10);
     push('فهد الغامدي','فني','غيّر حالة الأمر إلى قيد الاختبار','WO-0003',1,12);
-    push('ماجد الدوسري','مدير الورشة','أغلق أمر الصيانة','WO-0010',2,9);
+    push('ماجد الدوسري','مسؤول ورشة','أغلق أمر الصيانة','WO-0010',2,9);
     push('خالد المحمد','فني','أضاف قطعة مستخدمة','WO-0010',2,11);
     push('سعد العتيبي','فني','حدّث الأمر إلى جاهز للتسليم','WO-0006',3,13);
-    push('عبد الرحمن الحربي','مشرف','أضاف احتياجًا جديدًا','NEED-0003',4,10);
+    push('عبد الرحمن الحربي','مسؤول شعبة','أضاف احتياجًا جديدًا','NEED-0003',4,10);
     push('م. عمر الحسيني','مدير النظام','عدّل صلاحيات مستخدم','view',5,15);
 
     return {
@@ -1370,7 +1380,7 @@ class Component extends DCLogic {
     const t = r.type;
     if (t === 'تقرير الاستلامات') return { cols:['رقم الاستلام','التاريخ','الجهاز','Serial','الجهة المستفيدة','المستلم'], rows: this.db().receipts.filter(x => inRange(x.createdAt) && matchBenef(x.benef) && matchType(x.deviceId)).map(x => { const d = this.dev(x.deviceId); return { cells:[x.id, this.fmt(x.createdAt), d ? d.brand + ' ' + d.model : '—', d ? d.serial : '—', x.benef, this.empName(x.byEmp)] }; }) };
     if (t === 'تقرير الأجهزة') return { cols:['رقم الجهاز','النوع','الشركة والموديل','Serial','Asset','الجهة','الحالة'], rows: this.db().devices.filter(x => matchBenef(x.benef) && (r.devType === 'الكل' || x.type === r.devType)).map(x => ({ cells:[x.id, x.type, x.brand + ' ' + x.model, x.serial, x.asset || '—', x.benef, this.devStatus(x.id)] })) };
-    if (t === 'تقرير أداء الفنيين') return { cols:['الفني','المسندة','المكتملة','المتأخرة','نسبة الإنجاز','متوسط المدة (يوم)'], rows: this.db().employees.filter(e => e.role === 'فني' || e.role === 'مشرف').map(e => { const mine = orders.filter(o => o.techId === e.id && inRange(o.createdAt)); const done = mine.filter(o => ['تم التسليم','مغلق'].includes(o.status)); const late = mine.filter(o => this.isOverdue(o)); const avg = done.length ? (done.reduce((s, o) => s + (new Date(o.closedAt) - new Date(o.createdAt)) / 864e5, 0) / done.length).toFixed(1) : '—'; return { cells:[e.name, mine.length, done.length, late.length, (mine.length ? Math.round(done.length / mine.length * 100) : 0) + '%', avg] }; }) };
+    if (t === 'تقرير أداء الفنيين') return { cols:['الفني','المسندة','المكتملة','المتأخرة','نسبة الإنجاز','متوسط المدة (يوم)'], rows: this.db().employees.filter(e => e.role === 'فني' || e.role === 'مسؤول شعبة').map(e => { const mine = orders.filter(o => o.techId === e.id && inRange(o.createdAt)); const done = mine.filter(o => ['تم التسليم','مغلق'].includes(o.status)); const late = mine.filter(o => this.isOverdue(o)); const avg = done.length ? (done.reduce((s, o) => s + (new Date(o.closedAt) - new Date(o.createdAt)) / 864e5, 0) / done.length).toFixed(1) : '—'; return { cells:[e.name, mine.length, done.length, late.length, (mine.length ? Math.round(done.length / mine.length * 100) : 0) + '%', avg] }; }) };
     if (t === 'تقرير المهام') return { cols:['الرقم','المهمة','الموظف','الأولوية','الحالة','الموعد'], rows: this.db().tasks.filter(x => inRange(x.createdAt) && (r.tech === 'الكل' || this.empName(x.assignee) === r.tech) && (r.status === 'الكل' || x.status === r.status)).map(x => ({ cells:[x.id, x.title, this.empName(x.assignee), x.priority, x.status, this.fmt(x.due)] })) };
     if (t === 'تقرير القطع المستخدمة') { const rows = []; orders.filter(o => inRange(o.createdAt) && matchTech(o.techId)).forEach(o => o.parts.forEach(p => rows.push({ cells:[o.id, this.devLabel(o.deviceId), p.name, p.partNo || '—', p.qty, p.oldPart || '—', p.newPart || '—'] }))); return { cols:['أمر الصيانة','الجهاز','القطعة','Part Number','الكمية','القديمة','الجديدة'], rows }; }
     if (t === 'تقرير الأجهزة المتأخرة') return { cols:['أمر الصيانة','الجهاز','الجهة','الفني','الموعد','الحالة'], rows: orders.filter(o => this.isOverdue(o) && matchTech(o.techId) && matchBenef(o.benef)).map(o => ({ cells:[o.id, this.devLabel(o.deviceId), o.benef, this.empName(o.techId), this.fmt(o.dueAt), o.status] })) };
@@ -1580,8 +1590,8 @@ class Component extends DCLogic {
         togglePass: () => this.setState({ showPass: !S.showPass }),
         toggleRemember: () => this.setState({ remember: !S.remember }),
         signIn: this.signIn,
-          demoDisplay: (this.props.showDemoAccounts ?? true) ? 'block' : 'none',
-        demoAccounts: db.accounts.map(a => ({ role:a.role, user:a.user, fill: () => this.setState({ loginUser:a.user, loginPass:(a.pass || this.PASS), loginErr:'' }) }))
+          demoDisplay: 'none',
+        demoAccounts: []
       });
     }
 
@@ -1665,19 +1675,19 @@ class Component extends DCLogic {
         const patch = (fn, msg) => { const db2 = JSON.parse(JSON.stringify(db)); const acc = db2.accounts.find(x => x.user === a.user); fn(acc); const db3 = this.log(db2, msg, a.user); localStorage.setItem(this.KEY, JSON.stringify(db3)); this.setState({ db: db3 }); };
         const shown = (S.showPassFor || []).includes(a.user);
         return {
-          name:a.name, user:a.user, pass:a.pass || this.PASS, role:a.role, locked,
-          passType: shown ? 'text' : 'password',
-          eyeIcon: shown ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye',
-          toggleShow: () => this.setState({ showPassFor: shown ? (S.showPassFor || []).filter(x => x !== a.user) : (S.showPassFor || []).concat([a.user]) }),
-          canDelete: !locked && a.user !== S.user.user,
-          canSuspend: !locked && a.user !== S.user.user,
+          name:a.name, user:a.user, pass:'••••••••', role:a.role, locked,
+          passType: 'password',
+          eyeIcon: 'fa-solid fa-key',
+          toggleShow: () => this.toast('كلمات المرور مخفية لأسباب أمنية', C.orange),
+          canDelete: !locked && a.user !== S.user.user && !(a.role === 'مدير النظام' && db.accounts.filter(x => x.role === 'مدير النظام').length <= 1),
+          canSuspend: !locked && a.user !== S.user.user && !(a.role === 'مدير النظام' && db.accounts.filter(x => x.role === 'مدير النظام').length <= 1),
           activeLabel: a.active === false ? 'تنشيط الحساب' : 'إيقاف الحساب',
           activeIcon: a.active === false ? 'fa-solid fa-user-slash' : 'fa-solid fa-user-check',
           activeColor: a.active === false ? '#ff8fa9' : '#b8f34b',
           setName: e => patch(x => { x.name = e.target.value.replace(/[<>]/g, ''); }, 'عدّل اسم مستخدم'),
           setUser: e => { const v = e.target.value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, ''); if (!v) return this.toast('اسم المستخدم لا يصلح أن يكون فارغًا', C.red); if (db.accounts.some(x => x.user === v && x.user !== a.user)) return this.toast('اسم المستخدم مستخدم مسبقًا', C.red); patch(x => { x.user = v; }, 'عدّل اسم الدخول'); },
           setPass: e => patch(x => { x.pass = e.target.value; }, 'غيّر كلمة مرور حساب'),
-          setRole: e => { patch(x => { x.role = e.target.value; }, 'عدّل صلاحيات مستخدم'); this.toast('تم تحديث صلاحية ' + a.name); },
+          setRole: e => { const next = e.target.value; if (a.role === 'مدير النظام' && next !== 'مدير النظام' && db.accounts.filter(x => x.role === 'مدير النظام').length <= 1) return this.toast('يجب إبقاء مدير نظام واحد على الأقل', C.red); patch(x => { x.role = next; }, 'عدّل صلاحيات مستخدم'); this.toast('تم تحديث صلاحية ' + a.name); },
           toggleActive: () => { patch(x => { x.active = x.active === false; }, 'غيّر حالة حساب'); this.toast(a.active === false ? 'تم تنشيط الحساب' : 'تم إيقاف الحساب', C.orange); },
           remove: () => this.setState({ confirm:{ title:'حذف الحساب', text:'سيُحذف حساب «' + a.user + '» ولن يستطيع الدخول بعد الآن. هل تريد المتابعة؟', fn: () => {
             const db2 = JSON.parse(JSON.stringify(db));
