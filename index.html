@@ -66,7 +66,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
 
     <button onClick="{{ signIn }}" style="width:100%;border:0;border-radius:14px;padding:13px 16px;font-weight:800;color:#fff;background:linear-gradient(100deg,#f43fbd,#8b5cf6,#22d3ee);box-shadow:0 12px 26px rgba(139,92,246,.32)">تسجيل الدخول</button>
 
-    <div style="margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)">
+    <div style="margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);display:{{ demoDisplay }}">
       <p style="color:#8f89ab;font-size:.72rem;margin:0 0 10px">حسابات تجريبية — اضغط لتعبئتها</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px">
         <sc-for list="{{ demoAccounts }}" as="a" hint-placeholder-count="5">
@@ -292,11 +292,11 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
           </div>
 
           <div style="border-radius:20px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overflow:auto">
-            <table style="width:100%;border-collapse:collapse;min-width:{{ tableMin }}">
+            <table style="width:100%;border-collapse:collapse;table-layout:{{ tableLayout }};min-width:{{ tableMin }}">
               <thead>
                 <tr>
                   <sc-for list="{{ listCols }}" as="c" hint-placeholder-count="5">
-                    <th style="text-align:right;padding:14px 16px;font-size:.72rem;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap">{{ c }}</th>
+                    <th style="text-align:right;padding:{{ cellPad }};font-size:{{ headSize }};color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);white-space:{{ cellWrap }}">{{ c }}</th>
                   </sc-for>
                 </tr>
               </thead>
@@ -304,7 +304,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
                 <sc-for list="{{ listRows }}" as="r" hint-placeholder-count="6">
                   <tr>
                     <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
-                      <td style="padding:13px 16px;font-size:.79rem;border-top:1px solid var(--line);white-space:nowrap">
+                      <td style="padding:{{ cellPad }};font-size:{{ cellSize }};border-top:1px solid var(--line);white-space:{{ cellWrap }}">
                         <span style="display:inline-block;padding:{{ c.pad }};border-radius:{{ c.radius }};font-size:{{ c.size }};font-weight:{{ c.weight }};background:{{ c.bg }};color:{{ c.color }};border:1px solid {{ c.border }}">{{ c.text }}</span>
                       </td>
                     </sc-for>
@@ -532,11 +532,11 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
           </div>
 
           <div style="border-radius:20px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overflow:auto;margin-top:14px">
-            <table style="width:100%;border-collapse:collapse;min-width:680px">
+            <table style="width:100%;border-collapse:collapse;table-layout:{{ repLayout }};min-width:{{ repTableMin }}">
               <thead>
                 <tr>
                   <sc-for list="{{ reportCols }}" as="c" hint-placeholder-count="5">
-                    <th style="text-align:right;padding:14px 16px;font-size:.72rem;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap">{{ c }}</th>
+                    <th style="text-align:right;padding:{{ repCellPad }};font-size:{{ repHeadSize }};color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);white-space:{{ repCellWrap }}">{{ c }}</th>
                   </sc-for>
                 </tr>
               </thead>
@@ -544,7 +544,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
                 <sc-for list="{{ reportRows }}" as="r" hint-placeholder-count="6">
                   <tr>
                     <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
-                      <td style="padding:12px 16px;font-size:.78rem;border-top:1px solid var(--line);white-space:nowrap">{{ c }}</td>
+                      <td style="padding:{{ repCellPad }};font-size:{{ repCellSize }};border-top:1px solid var(--line);white-space:{{ repCellWrap }}">{{ c }}</td>
                     </sc-for>
                   </tr>
                 </sc-for>
@@ -604,20 +604,44 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
           </div>
 
           <div style="padding:22px;border-radius:20px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);margin-top:14px">
-            <h3 style="margin:0 0 6px;font-size:.95rem">المستخدمون والصلاحيات</h3>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+              <h3 style="margin:0;font-size:.95rem">المستخدمون والصلاحيات</h3>
+              <sc-if value="{{ isOwner }}">
+                <button onClick="{{ addAccount }}" style="border:0;border-radius:12px;padding:9px 15px;font-weight:800;font-size:.78rem;color:#fff;background:linear-gradient(100deg,#8b5cf6,#22d3ee)">+ حساب جديد</button>
+              </sc-if>
+            </div>
             <p style="margin:0 0 14px;color:var(--muted);font-size:.74rem">{{ permNote }}</p>
             <sc-for list="{{ users }}" as="u" hint-placeholder-count="5">
-              <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)">
-                <div style="min-width:170px">
-                  <b style="font-size:.83rem">{{ u.name }}</b>
-                  <small style="display:block;color:var(--muted);font-size:.7rem">{{ u.user }}</small>
-                </div>
-                <select value="{{ u.role }}" onChange="{{ u.setRole }}" disabled="{{ u.locked }}" style="background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:8px 10px;font-size:.77rem">
-                  <sc-for list="{{ roles }}" as="r" hint-placeholder-count="5">
-                    <option value="{{ r }}" style="background:#131127;color:#f5f3ff">{{ r }}</option>
-                  </sc-for>
-                </select>
-                <span style="color:var(--muted);font-size:.72rem;margin-inline-start:auto">{{ u.perm }}</span>
+              <div style="padding:14px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:{{ userCols }};gap:10px;align-items:end">
+                <label style="display:block">
+                  <span style="display:block;color:var(--muted);font-size:.68rem;margin-bottom:5px">الاسم</span>
+                  <input value="{{ u.name }}" onChange="{{ u.setName }}" disabled="{{ u.locked }}" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:.79rem" />
+                </label>
+                <label style="display:block">
+                  <span style="display:block;color:var(--muted);font-size:.68rem;margin-bottom:5px">اسم المستخدم</span>
+                  <input value="{{ u.user }}" onChange="{{ u.setUser }}" disabled="{{ u.locked }}" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:.79rem;direction:ltr;text-align:left" />
+                </label>
+                <label style="display:block">
+                  <span style="display:block;color:var(--muted);font-size:.68rem;margin-bottom:5px">كلمة المرور</span>
+                  <input value="{{ u.pass }}" onChange="{{ u.setPass }}" disabled="{{ u.locked }}" type="{{ u.passType }}" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:.79rem;direction:ltr;text-align:left" />
+                </label>
+                <label style="display:block">
+                  <span style="display:block;color:var(--muted);font-size:.68rem;margin-bottom:5px">الصلاحية</span>
+                  <select value="{{ u.role }}" onChange="{{ u.setRole }}" disabled="{{ u.locked }}" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:9px 10px;font-size:.78rem">
+                    <sc-for list="{{ roles }}" as="r" hint-placeholder-count="5">
+                      <option value="{{ r }}" style="background:#131127;color:#f5f3ff">{{ r }}</option>
+                    </sc-for>
+                  </select>
+                </label>
+                <span style="display:flex;gap:6px">
+                  <button onClick="{{ u.toggleShow }}" title="إظهار / إخفاء كلمة المرور" style="width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);color:var(--muted)"><i class="{{ u.eyeIcon }}"></i></button>
+                  <sc-if value="{{ u.canDelete }}">
+                    <button onClick="{{ u.remove }}" title="حذف الحساب" style="width:36px;height:36px;border-radius:11px;border:1px solid rgba(251,85,130,.3);background:rgba(251,85,130,.12);color:#ff8fa9"><i class="fa-solid fa-trash"></i></button>
+                  </sc-if>
+                  <sc-if value="{{ u.canSuspend }}">
+                    <button onClick="{{ u.toggleActive }}" title="{{ u.activeLabel }}" style="width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);color:{{ u.activeColor }}"><i class="{{ u.activeIcon }}"></i></button>
+                  </sc-if>
+                </span>
               </div>
             </sc-for>
           </div>
@@ -636,7 +660,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
       <div style="display:grid;grid-template-columns:{{ modalCols }};gap:13px">
         <sc-for list="{{ modalFields }}" as="f" hint-placeholder-count="6">
           <label style="display:block;grid-column:{{ f.span }}">
-            <span style="display:block;color:var(--muted);font-size:.73rem;margin-bottom:6px">{{ f.label }}</span>
+            <span style="display:block;color:var(--muted);font-size:.73rem;margin-bottom:6px">{{ f.label }}<span style="color:#fb5582;font-weight:800">{{ f.star }}</span></span>
             <sc-if value="{{ f.isSelect }}">
               <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px">
                 <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
@@ -658,7 +682,11 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)!impor
           </label>
         </sc-for>
       </div>
-      <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap">
+      <sc-if value="{{ modalErr }}">
+        <p style="margin:16px 0 0;padding:11px 14px;border-radius:12px;border:1px solid rgba(251,85,130,.35);background:rgba(251,85,130,.12);color:#ff8fa9;font-size:.78rem;font-weight:700">{{ modalErr }}</p>
+      </sc-if>
+      <p style="margin:14px 0 0;color:var(--muted);font-size:.72rem">الحقول المعلَّمة بـ <span style="color:#fb5582;font-weight:800">*</span> مطلوبة.</p>
+      <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap">
         <button onClick="{{ closeModal }}" style="border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:12px;padding:11px 18px;font-weight:700">إلغاء</button>
         <button onClick="{{ saveModal }}" style="border:0;border-radius:12px;padding:11px 20px;font-weight:800;color:#fff;background:linear-gradient(100deg,#f43fbd,#8b5cf6,#22d3ee)">{{ modalSaveLabel }}</button>
       </div>
@@ -794,11 +822,11 @@ class Component extends DCLogic {
   };
 
   ACCOUNTS = [
-    { user:'admin', role:'مدير النظام', name:'م. عمر الحسيني', empId:null },
-    { user:'manager', role:'مدير الورشة', name:'ماجد الدوسري', empId:'EMP-006' },
-    { user:'super', role:'مشرف', name:'عبد الرحمن الحربي', empId:'EMP-005' },
-    { user:'tech', role:'فني', name:'أحمد السعيد', empId:'EMP-001' },
-    { user:'view', role:'مشاهد', name:'سارة القحطاني', empId:null }
+    { user:'admin', pass:'cmw2026', active:true, role:'مدير النظام', name:'م. عمر الحسيني', empId:null },
+    { user:'manager', pass:'cmw2026', active:true, role:'مدير الورشة', name:'ماجد الدوسري', empId:'EMP-006' },
+    { user:'super', pass:'cmw2026', active:true, role:'مشرف', name:'عبد الرحمن الحربي', empId:'EMP-005' },
+    { user:'tech', pass:'cmw2026', active:true, role:'فني', name:'أحمد السعيد', empId:'EMP-001' },
+    { user:'view', pass:'cmw2026', active:true, role:'مشاهد', name:'سارة القحطاني', empId:null }
   ];
   PASS = 'cmw2026';
 
@@ -814,6 +842,7 @@ class Component extends DCLogic {
     let db = null, session = null;
     try { db = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch(e) { db = null; }
     try { session = JSON.parse(localStorage.getItem(this.KEY + '-session') || 'null'); } catch(e) { session = null; }
+    if (db && Array.isArray(db.accounts)) db.accounts.forEach(a => { if (a.pass === undefined) a.pass = this.PASS; if (a.active === undefined) a.active = true; });
     const broken = !db || !db.settings || !db.accounts || !Array.isArray(db.devices) || !db.devices.length
       || !Array.isArray(db.receipts) || !db.receipts.length || !Array.isArray(db.orders) || !db.orders.length
       || !Array.isArray(db.employees) || !db.employees.length || !Array.isArray(db.tasks) || !Array.isArray(db.needs) || !Array.isArray(db.activity);
@@ -1029,8 +1058,9 @@ class Component extends DCLogic {
   // ---------- auth ----------
   signIn = () => {
     const u = this.state.loginUser.trim().toLowerCase();
-    const acct = (this.db().accounts || []).find(a => a.user === u);
-    if (!acct || this.state.loginPass !== this.PASS) { this.setState({ loginErr:'اسم المستخدم أو كلمة المرور غير صحيحة.' }); return; }
+    const acct = (this.db().accounts || []).find(a => String(a.user).toLowerCase() === u);
+    if (!acct || this.state.loginPass !== (acct.pass || this.PASS)) { this.setState({ loginErr:'اسم المستخدم أو كلمة المرور غير صحيحة.' }); return; }
+    if (acct.active === false) { this.setState({ loginErr:'هذا الحساب موقوف. راجع مدير النظام.' }); return; }
     const user = { ...acct };
     if (this.state.remember) localStorage.setItem(this.KEY + '-session', JSON.stringify(user));
     const db = this.log(this.db(), 'سجّل الدخول إلى النظام', acct.user);
@@ -1047,7 +1077,7 @@ class Component extends DCLogic {
     const schema = this.schema(kind);
     schema.forEach(f => { form[f.key] = record ? (record[f.key] !== undefined && record[f.key] !== null ? record[f.key] : '') : (f.def !== undefined ? f.def : ''); });
     if (kind === 'receipt' && !record) { form.deviceMode = 'new'; }
-    this.setState({ modal:{ kind, id: record ? record.id : null }, form });
+    this.setState({ modal:{ kind, id: record ? record.id : null }, form, modalErr: null });
   };
   setField = (key) => (e) => {
     const t = e.target;
@@ -1065,14 +1095,14 @@ class Component extends DCLogic {
       { key:'benef', label:'الجهة المستفيدة', type:'select', options: opts(this.BENEF), def:this.BENEF[0] },
       { key:'receiver', label:'اسم المُسلِّم من الجهة', type:'text' },
       { key:'type', label:'نوع الجهاز', type:'select', options: opts(this.DEV_TYPES), def:'Desktop' },
-      { key:'brand', label:'الشركة', type:'text' },
-      { key:'model', label:'الموديل', type:'text' },
-      { key:'serial', label:'Serial Number', type:'text' },
+      { key:'brand', label:'الشركة', type:'text', req:true },
+      { key:'model', label:'الموديل', type:'text', req:true },
+      { key:'serial', label:'Serial Number', type:'text', req:true },
       { key:'asset', label:'Asset Number', type:'text' },
       { key:'condition', label:'حالة الجهاز عند الاستلام', type:'select', options: opts(['يعمل','يعمل مع خلل','لا يعمل','تالف']), def:'يعمل مع خلل' },
       { key:'byEmp', label:'الموظف المستلم', type:'select', options: emps, def: emps[0] ? emps[0].v : '' },
       { key:'accessories', label:'الملحقات', type:'text' },
-      { key:'fault', label:'وصف العطل', type:'area', wide:true },
+      { key:'fault', label:'وصف العطل', type:'area', wide:true, req:true },
       { key:'notes', label:'ملاحظات', type:'area', wide:true },
       { key:'images', label:'صور الجهاز / الرقم التسلسلي / العطل', type:'file', wide:true }
     ];
@@ -1083,7 +1113,7 @@ class Component extends DCLogic {
       { key:'type', label:'نوع الصيانة', type:'select', options: opts(this.MAINT_TYPES), def:this.MAINT_TYPES[0] },
       { key:'priority', label:'الأولوية', type:'select', options: opts(this.PRIORITIES), def:'عادية' },
       { key:'status', label:'الحالة', type:'select', options: opts(this.ORDER_STATUSES), def:'جديد' },
-      { key:'problem', label:'وصف المشكلة', type:'area', wide:true },
+      { key:'problem', label:'وصف المشكلة', type:'area', wide:true, req:true },
       { key:'diagnosis', label:'التشخيص', type:'area', wide:true },
       { key:'action', label:'الإجراء المتخذ', type:'area', wide:true },
       { key:'tests', label:'الاختبارات', type:'text' },
@@ -1098,15 +1128,15 @@ class Component extends DCLogic {
       { key:'benef', label:'الجهة المستفيدة', type:'select', options: opts(this.BENEF), def:this.BENEF[0] }
     ];
     if (kind === 'employee') return [
-      { key:'name', label:'الاسم', type:'text' },
+      { key:'name', label:'الاسم', type:'text', req:true },
       { key:'empNo', label:'رقم الموظف', type:'text' },
-      { key:'job', label:'الوظيفة', type:'text' },
+      { key:'job', label:'الوظيفة', type:'text', req:true },
       { key:'dept', label:'الشعبة', type:'select', options: opts(['الصيانة','الدعم الفني','الشبكات','الإدارة']), def:'الصيانة' },
       { key:'role', label:'الصلاحية', type:'select', options: opts(this.ROLES), def:'فني' },
       { key:'active', label:'حالة الحساب', type:'select', options: opts(['نشط','موقوف']), def:'نشط' }
     ];
     if (kind === 'task') return [
-      { key:'title', label:'عنوان المهمة', type:'text', wide:true },
+      { key:'title', label:'عنوان المهمة', type:'text', wide:true, req:true },
       { key:'assignee', label:'الموظف', type:'select', options: emps, def: emps[0] ? emps[0].v : '' },
       { key:'priority', label:'الأولوية', type:'select', options: opts(this.PRIORITIES), def:'عادية' },
       { key:'status', label:'الحالة', type:'select', options: opts(this.TASK_STATUSES), def:'جديدة' },
@@ -1115,7 +1145,7 @@ class Component extends DCLogic {
       { key:'directive', label:'نص التوجيه', type:'area', wide:true }
     ];
     if (kind === 'need') return [
-      { key:'name', label:'اسم القطعة / الاحتياج', type:'text' },
+      { key:'name', label:'اسم القطعة / الاحتياج', type:'text', req:true },
       { key:'partNo', label:'Part Number', type:'text' },
       { key:'qty', label:'الكمية', type:'number', def:1 },
       { key:'unit', label:'الوحدة', type:'text', def:'قطعة' },
@@ -1126,7 +1156,7 @@ class Component extends DCLogic {
       { key:'notes', label:'ملاحظات', type:'area', wide:true }
     ];
     if (kind === 'part') return [
-      { key:'name', label:'اسم القطعة', type:'text' },
+      { key:'name', label:'اسم القطعة', type:'text', req:true },
       { key:'partNo', label:'Part Number', type:'text' },
       { key:'qty', label:'الكمية', type:'number', def:1 },
       { key:'oldPart', label:'القطعة القديمة', type:'text' },
@@ -1134,7 +1164,7 @@ class Component extends DCLogic {
       { key:'notes', label:'ملاحظات', type:'area', wide:true }
     ];
     if (kind === 'delivery') return [
-      { key:'receiver', label:'اسم المستلم من الجهة', type:'text', wide:true },
+      { key:'receiver', label:'اسم المستلم من الجهة', type:'text', wide:true, req:true },
       { key:'notes', label:'ملاحظات المحضر', type:'area', wide:true }
     ];
     return [];
@@ -1145,7 +1175,7 @@ class Component extends DCLogic {
     if (!modal) return;
     let db = JSON.parse(JSON.stringify(this.db()));
     const k = modal.kind;
-    const req = (keys, msg) => { for (const key of keys) { if (!String(form[key] || '').trim()) { this.toast(msg, this.C.red); return false; } } return true; };
+    const req = (keys, msg) => { for (const key of keys) { if (!String(form[key] || '').trim()) { this.setState({ modalErr: msg }); this.toast(msg, this.C.red); return false; } } this.setState({ modalErr: null }); return true; };
     const clean = s => String(s === undefined || s === null ? '' : s).replace(/[<>]/g, '');
 
     if (k === 'receipt') {
@@ -1550,7 +1580,8 @@ class Component extends DCLogic {
         togglePass: () => this.setState({ showPass: !S.showPass }),
         toggleRemember: () => this.setState({ remember: !S.remember }),
         signIn: this.signIn,
-        demoAccounts: db.accounts.map(a => ({ role:a.role, user:a.user, fill: () => this.setState({ loginUser:a.user, loginPass:this.PASS, loginErr:'' }) }))
+          demoDisplay: (this.props.showDemoAccounts ?? true) ? 'block' : 'none',
+        demoAccounts: db.accounts.map(a => ({ role:a.role, user:a.user, fill: () => this.setState({ loginUser:a.user, loginPass:(a.pass || this.PASS), loginErr:'' }) }))
       });
     }
 
@@ -1616,9 +1647,48 @@ class Component extends DCLogic {
       printOpen: !!S.print, printDoc: this.printDoc(), doPrint: this.doPrint, closePrint: this.closePrint,
       onWorkshopName: e => { const db2 = JSON.parse(JSON.stringify(db)); db2.settings.workshopName = e.target.value.replace(/[<>]/g, ''); localStorage.setItem(this.KEY, JSON.stringify(db2)); this.setState({ db: db2 }); },
       backupExport: this.backupExport, backupImport: this.backupImport, exportAllCsv: this.exportAllCsv, resetDemo: this.resetDemo,
-      permNote: this.can('employees') || S.user.role === 'مدير النظام' ? 'مدير النظام فقط يمكنه تغيير الأدوار. كلمة المرور التجريبية موحّدة ولا تُخزَّن في الواجهة.' : 'العرض فقط — تغيير الأدوار متاح لمدير النظام.',
-      users: db.accounts.map(a => ({ name:a.name, user:a.user, role:a.role, locked: S.user.role !== 'مدير النظام', perm: (this.PERMS[a.role].write === 'all' ? 'كل الصلاحيات' : (this.PERMS[a.role].write.length ? 'تحرير: ' + this.PERMS[a.role].write.length + ' أقسام' : 'قراءة فقط')),
-        setRole: e => { const db2 = JSON.parse(JSON.stringify(db)); db2.accounts.find(x => x.user === a.user).role = e.target.value; const db3 = this.log(db2, 'عدّل صلاحيات مستخدم', a.user); localStorage.setItem(this.KEY, JSON.stringify(db3)); this.setState({ db: db3 }); this.toast('تم تحديث صلاحية ' + a.name); } }))
+      isOwner: S.user.role === 'مدير النظام',
+      userCols: mobile ? '1fr' : (narrow ? '1fr 1fr' : '1.2fr 1fr 1fr 1fr auto'),
+      addAccount: () => {
+        const db2 = JSON.parse(JSON.stringify(db));
+        let n = 1, u = 'user1';
+        while (db2.accounts.some(a => a.user === u)) { n++; u = 'user' + n; }
+        db2.accounts.push({ user:u, pass:'cmw2026', active:true, role:'مشاهد', name:'مستخدم جديد ' + n, empId:null });
+        const db3 = this.log(db2, 'أضاف حساب مستخدم', u);
+        localStorage.setItem(this.KEY, JSON.stringify(db3));
+        this.setState({ db: db3 });
+        this.toast('تم إنشاء حساب «' + u + '» — غيّر اسمه وكلمة مروره');
+      },
+      permNote: S.user.role === 'مدير النظام' ? 'أنت مدير النظام: تستطيع تغيير اسم المستخدم وكلمة المرور والصلاحية لأي حساب، وإضافة الحسابات أو حذفها. التغيير يسري في تسجيل الدخول التالي.' : 'العرض فقط — تعديل الحسابات متاح لمدير النظام فقط.',
+      users: db.accounts.map(a => {
+        const locked = S.user.role !== 'مدير النظام';
+        const patch = (fn, msg) => { const db2 = JSON.parse(JSON.stringify(db)); const acc = db2.accounts.find(x => x.user === a.user); fn(acc); const db3 = this.log(db2, msg, a.user); localStorage.setItem(this.KEY, JSON.stringify(db3)); this.setState({ db: db3 }); };
+        const shown = (S.showPassFor || []).includes(a.user);
+        return {
+          name:a.name, user:a.user, pass:a.pass || this.PASS, role:a.role, locked,
+          passType: shown ? 'text' : 'password',
+          eyeIcon: shown ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye',
+          toggleShow: () => this.setState({ showPassFor: shown ? (S.showPassFor || []).filter(x => x !== a.user) : (S.showPassFor || []).concat([a.user]) }),
+          canDelete: !locked && a.user !== S.user.user,
+          canSuspend: !locked && a.user !== S.user.user,
+          activeLabel: a.active === false ? 'تنشيط الحساب' : 'إيقاف الحساب',
+          activeIcon: a.active === false ? 'fa-solid fa-user-slash' : 'fa-solid fa-user-check',
+          activeColor: a.active === false ? '#ff8fa9' : '#b8f34b',
+          setName: e => patch(x => { x.name = e.target.value.replace(/[<>]/g, ''); }, 'عدّل اسم مستخدم'),
+          setUser: e => { const v = e.target.value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, ''); if (!v) return this.toast('اسم المستخدم لا يصلح أن يكون فارغًا', C.red); if (db.accounts.some(x => x.user === v && x.user !== a.user)) return this.toast('اسم المستخدم مستخدم مسبقًا', C.red); patch(x => { x.user = v; }, 'عدّل اسم الدخول'); },
+          setPass: e => patch(x => { x.pass = e.target.value; }, 'غيّر كلمة مرور حساب'),
+          setRole: e => { patch(x => { x.role = e.target.value; }, 'عدّل صلاحيات مستخدم'); this.toast('تم تحديث صلاحية ' + a.name); },
+          toggleActive: () => { patch(x => { x.active = x.active === false; }, 'غيّر حالة حساب'); this.toast(a.active === false ? 'تم تنشيط الحساب' : 'تم إيقاف الحساب', C.orange); },
+          remove: () => this.setState({ confirm:{ title:'حذف الحساب', text:'سيُحذف حساب «' + a.user + '» ولن يستطيع الدخول بعد الآن. هل تريد المتابعة؟', fn: () => {
+            const db2 = JSON.parse(JSON.stringify(db));
+            db2.accounts = db2.accounts.filter(x => x.user !== a.user);
+            const db3 = this.log(db2, 'حذف حساب مستخدم', a.user);
+            localStorage.setItem(this.KEY, JSON.stringify(db3));
+            this.setState({ db: db3, confirm:null });
+            this.toast('تم حذف الحساب', C.orange);
+          } } })
+        };
+      })
     });
 
     if (S.modal) {
@@ -1632,8 +1702,9 @@ class Component extends DCLogic {
         span: f.wide ? '1 / -1' : 'auto',
         isSelect: f.type === 'select', isArea: f.type === 'area', isFile: f.type === 'file',
         isInput: ['text','number','date'].includes(f.type), type: f.type === 'number' ? 'number' : (f.type === 'date' ? 'date' : 'text'),
-        options: f.options || [], onChange: this.setField(f.key)
+        options: f.options || [], onChange: this.setField(f.key), star: f.req ? ' *' : ''
       }));
+      vals.modalErr = S.modalErr || '';
       if (S.modal.kind === 'file') vals.modalFields = [];
     }
 
@@ -1676,7 +1747,13 @@ class Component extends DCLogic {
     if (isListPage) {
       const cfg = this.listConfig();
       vals.listTitle = cfg.title; vals.listSub = cfg.sub; vals.listCols = cfg.cols; vals.listRows = cfg.rows;
-      vals.tableMin = cfg.min;
+      const tight = cfg.cols.length > 5;
+      vals.tableMin = tight ? '100%' : cfg.min;
+      vals.tableLayout = tight ? 'fixed' : 'auto';
+      vals.cellWrap = tight ? 'normal' : 'nowrap';
+      vals.cellPad = tight ? '10px 8px' : '13px 16px';
+      vals.cellSize = tight ? '.72rem' : '.79rem';
+      vals.headSize = tight ? '.66rem' : '.72rem';
       vals.listCanAdd = !!cfg.addLabel && this.can(cfg.section); vals.listAddLabel = cfg.addLabel;
       vals.listAdd = () => this.openModal({ receipts:'receipt', devices:'device', orders:'order', employees:'employee', tasks:'task', needs:'need' }[cfg.section], null);
       vals.listEmpty = cfg.rows.length === 0;
@@ -1773,6 +1850,13 @@ class Component extends DCLogic {
       ];
       vals.reportCols = data.cols; vals.reportRows = data.rows; vals.reportEmpty = data.rows.length === 0;
       vals.reportCount = 'عدد السجلات: ' + data.rows.length;
+      const tightR = data.cols.length > 5;
+      vals.repTableMin = tightR ? '100%' : '680px';
+      vals.repCellWrap = tightR ? 'normal' : 'nowrap';
+      vals.repCellPad = tightR ? '10px 8px' : '13px 16px';
+      vals.repCellSize = tightR ? '.72rem' : '.78rem';
+      vals.repHeadSize = tightR ? '.66rem' : '.72rem';
+      vals.repLayout = tightR ? 'fixed' : 'auto';
       vals.printReport = () => this.openPrint('report', null);
       vals.exportCsv = () => this.csv(data.cols, data.rows.map(x => x.cells), 'cmw-report');
     }
